@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { CreateItemDto } from './dto/create-item.dto';
 import { Item, ItemStatus } from './item.model';
 import { ItemsService } from './items.service';
 
@@ -26,26 +27,15 @@ export class ItemsController {
   }
 
   @Post()
-  create(
-    @Body('id') id: string,
-    @Body('name') name: string,
-    @Body('price') price: number,
-    @Body('description') description: string,
-    @Body('status') status: ItemStatus = 'ON_SALE',
-  ): Item {
-    const item: Item = {
-      id,
-      name,
-      price,
-      description,
-      status,
-    };
-    return this.itemsService.create(item);
+  create(@Body() createItemDto: CreateItemDto): Item {
+    return this.itemsService.create(createItemDto);
   }
+
   @Patch(':id') // データ更新は Patch リクエスト
   udpateStatus(@Param('id') id: string) {
     return this.itemsService.updateStatus(id);
   }
+
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.itemsService.delte(id);
