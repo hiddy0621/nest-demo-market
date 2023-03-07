@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { Item, ItemStatus } from './item.model';
 import { ItemsService } from './items.service';
 
@@ -6,10 +14,15 @@ import { ItemsService } from './items.service';
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
-  @Get() // リクエスト名
+  @Get() // HTTP リクエスト名をつける
   // メソッド名
   findAll(): Item[] {
     return this.itemsService.findAll();
+  }
+
+  @Get(':id') // 『:』を付与してパラメーターを可変にする
+  getById(@Param('id') id: string): Item {
+    return this.itemsService.getById(id);
   }
 
   @Post()
@@ -28,5 +41,13 @@ export class ItemsController {
       status,
     };
     return this.itemsService.create(item);
+  }
+  @Patch(':id') // データ更新は Patch リクエスト
+  udpateStatus(@Param('id') id: string) {
+    return this.itemsService.updateStatus(id);
+  }
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.itemsService.delte(id);
   }
 }
