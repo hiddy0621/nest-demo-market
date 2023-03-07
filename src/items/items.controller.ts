@@ -8,7 +8,7 @@ export class ItemsController {
 
   @Get() // リクエスト名
   // メソッド名
-  findAll() {
+  findAll(): Item[] {
     return this.itemsService.findAll();
   }
 
@@ -18,7 +18,7 @@ export class ItemsController {
     @Body('name') name: string,
     @Body('price') price: number,
     @Body('description') description: string,
-    @Body('status') status: ItemStatus = 'SOLD_OUT',
+    @Body('status') status: ItemStatus = 'ON_SALE',
   ): Item {
     const item: Item = {
       id,
