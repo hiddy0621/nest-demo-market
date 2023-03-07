@@ -23,7 +23,7 @@ export class ItemsController {
   }
 
   @Get(':id') // 『:』を付与してパラメーターを可変にする
-  getById(@Param('id', ParseUUIDPipe) id: string): Item {
+  getById(@Param('id') id: string): Item {
     return this.itemsService.getById(id);
   }
 
