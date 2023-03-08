@@ -4,10 +4,8 @@ import { CreateItemDto } from './dto/create-item.dto';
 // import { Item } from './item.model';
 import { Item } from '../entities/item.entity';
 import { ItemRepository } from './item.repository';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { ItemStatus } from './item.model';
-
-type Q = QueryDeepPartialEntity<Item>;
+// import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+// import { ItemStatus } from './item.model';
 
 @Injectable()
 export class ItemsService {
