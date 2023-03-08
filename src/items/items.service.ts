@@ -4,6 +4,10 @@ import { CreateItemDto } from './dto/create-item.dto';
 // import { Item } from './item.model';
 import { Item } from '../entities/item.entity';
 import { ItemRepository } from './item.repository';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { ItemStatus } from './item.model';
+
+type Q = QueryDeepPartialEntity<Item>;
 
 @Injectable()
 export class ItemsService {
@@ -34,14 +38,20 @@ export class ItemsService {
     return await this.itemRepositry.createItem(createItemDto);
   }
 
-  // updateStatus(id: string): Item {
-  //   const item = this.getById(id);
-  //   item.status = 'SOLD_OUT';
-  //   return item;
-  // }
+  // プロパティを書き換えたら、Save
+  async updateStatus(id: string): Promise<Item> {
+    const item = await this.getById(id);
+    // console.log(item);
+    if (item) {
+      item.status = 'SOLD_OUT';
+      item.updatedAt = new Date().toISOString();
+      await this.itemRepositry.save(item);
+      return item;
+    }
+  }
 
-  delte(id: string): void {
-    this.items = this.items.filter((item) => item.id !== id);
+  async delete(id: string): Promise<void> {
+    await this.itemRepositry.delete({ id });
     return;
   }
 }

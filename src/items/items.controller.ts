@@ -38,13 +38,13 @@ export class ItemsController {
     return await this.itemsService.create(createItemDto);
   }
 
-  // @Patch(':id') // データ更新は Patch リクエスト
-  // udpateStatus(@Param('id', ParseUUIDPipe) id: string) {
-  //   return this.itemsService.updateStatus(id);
-  // }
+  @Patch(':id') // データ更新は Patch リクエスト
+  async udpateStatus(@Param('id', ParseUUIDPipe) id: string): Promise<Item> {
+    return await this.itemsService.updateStatus(id);
+  }
 
   @Delete(':id')
-  delete(@Param('id', ParseUUIDPipe) id: string) {
-    return this.itemsService.delte(id);
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return await this.itemsService.delete(id);
   }
 }
