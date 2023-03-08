@@ -12,15 +12,16 @@ export class ItemsService {
 
   private items: Item[] = [];
 
-  // 基本的なCRUD操作
+  // Item Repository クラスをセットしたら
+  // メソッドを適宜書き換える（リポジトリのメソッドを使う）
 
-  findAll(): Item[] {
-    return this.items;
+  async findAll(): Promise<Item[]> {
+    return await this.itemRepositry.find();
   }
 
   // ID から商品を検索する
-  getById(id: string): Item {
-    const found = this.items.find((item) => item.id === id);
+  async getById(id: string): Promise<Item> {
+    const found = await this.itemRepositry.findOne(id);
     if (!found) {
       throw new NotFoundException();
     }
@@ -33,11 +34,11 @@ export class ItemsService {
     return await this.itemRepositry.createItem(createItemDto);
   }
 
-  updateStatus(id: string): Item {
-    const item = this.getById(id);
-    item.status = 'SOLD_OUT';
-    return item;
-  }
+  // updateStatus(id: string): Item {
+  //   const item = this.getById(id);
+  //   item.status = 'SOLD_OUT';
+  //   return item;
+  // }
 
   delte(id: string): void {
     this.items = this.items.filter((item) => item.id !== id);

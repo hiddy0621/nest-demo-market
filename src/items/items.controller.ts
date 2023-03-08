@@ -18,15 +18,18 @@ import { ItemsService } from './items.service';
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
+  // Item Repository クラスをセットしたら
+  // メソッドを適宜書き換える（サービスのメソッドを使う）
+
   @Get() // HTTP リクエスト名をつける
   // メソッド名
-  findAll(): Item[] {
-    return this.itemsService.findAll();
+  async findAll(): Promise<Item[]> {
+    return await this.itemsService.findAll();
   }
 
   @Get(':id') // 『:』を付与してパラメーターを可変にする
-  getById(@Param('id') id: string): Item {
-    return this.itemsService.getById(id);
+  async getById(@Param('id') id: string): Promise<Item> {
+    return await this.itemsService.getById(id);
   }
 
   @Post()
@@ -35,10 +38,10 @@ export class ItemsController {
     return await this.itemsService.create(createItemDto);
   }
 
-  @Patch(':id') // データ更新は Patch リクエスト
-  udpateStatus(@Param('id', ParseUUIDPipe) id: string) {
-    return this.itemsService.updateStatus(id);
-  }
+  // @Patch(':id') // データ更新は Patch リクエスト
+  // udpateStatus(@Param('id', ParseUUIDPipe) id: string) {
+  //   return this.itemsService.updateStatus(id);
+  // }
 
   @Delete(':id')
   delete(@Param('id', ParseUUIDPipe) id: string) {
