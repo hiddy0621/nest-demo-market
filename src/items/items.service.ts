@@ -1,13 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 // Entity から クラスを参照するように
 // import { Item } from './item.model';
 import { Item } from '../entities/item.entity';
 import { ItemRepository } from './item.repository';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { ItemStatus } from './item.model';
-
-type Q = QueryDeepPartialEntity<Item>;
+import { User } from 'src/entities/user.entity';
+// import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+// import { ItemStatus } from './item.model';
 
 @Injectable()
 export class ItemsService {
@@ -32,16 +35,19 @@ export class ItemsService {
     return found;
   }
 
-  // アイテムオブジェクトの作成メソッドはリポジトリに移管済み
-  // そのため、そのメソッドを呼び出せばOK
-  async create(createItemDto: CreateItemDto): Promise<Item> {
-    return await this.itemRepositry.createItem(createItemDto);
+  // 作成メソッドはリポジトリに移管済み
+  // なので、リポジトリからメソッドを呼び出せばOK
+  async create(createItemDto: CreateItemDto, user: User): Promise<Item> {
+    return await this.itemRepositry.createItem(createItemDto, user);
   }
 
   // プロパティを書き換えたら、Save
-  async updateStatus(id: string): Promise<Item> {
+  async updateStatus(id: string, user: User): Promise<Item> {
     const item = await this.getById(id);
     // console.log(item);
+    if (item.userId === user.id) {
+      throw new BadRequestException('自分のアイテムは購入できないらしい');
+    }
     if (item) {
       item.status = 'SOLD_OUT';
       item.updatedAt = new Date().toISOString();
@@ -50,7 +56,11 @@ export class ItemsService {
     }
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, user: User): Promise<void> {
+    const item = await this.getById(id);
+    if (item.userId !== user.id) {
+      throw new BadRequestException('他の人の商品は勝手に消せないよ');
+    }
     await this.itemRepositry.delete({ id });
     return;
   }

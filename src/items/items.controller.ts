@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -7,44 +8,60 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 // Item クラスのインポートは Entity から。
 // import { Item } from './item.model';
 import { Item } from '../entities/item.entity';
 import { ItemsService } from './items.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { GetUser } from 'src/auth/decorator/get-user.decorator';
+import { User } from 'src/entities/user.entity';
+import { Role } from 'src/auth/decorator/role.decorator';
+import { RoleGuard } from 'src/auth/guards/role.guard';
 
 @Controller('items')
+@UseInterceptors(ClassSerializerInterceptor)
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
-  // Item Repository クラスをセットしたら
-  // メソッドを適宜書き換える（サービスのメソッドを使う）
-
-  @Get() // HTTP リクエスト名をつける
-  // メソッド名
+  @Get()
   async findAll(): Promise<Item[]> {
     return await this.itemsService.findAll();
   }
 
-  @Get(':id') // 『:』を付与してパラメーターを可変にする
+  @Get(':id')
   async getById(@Param('id') id: string): Promise<Item> {
     return await this.itemsService.getById(id);
   }
 
   @Post()
-  async create(@Body() createItemDto: CreateItemDto): Promise<Item> {
-    // サービス同様、リポジトリからメソッドを呼ぶようにする
-    return await this.itemsService.create(createItemDto);
+  @Role('PREMIUM')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async create(
+    @Body() createItemDto: CreateItemDto,
+    @GetUser() user: User,
+  ): Promise<Item> {
+    return await this.itemsService.create(createItemDto, user);
   }
 
-  @Patch(':id') // データ更新は Patch リクエスト
-  async udpateStatus(@Param('id', ParseUUIDPipe) id: string): Promise<Item> {
-    return await this.itemsService.updateStatus(id);
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  async udpateStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @GetUser() user: User,
+  ): Promise<Item> {
+    return await this.itemsService.updateStatus(id, user);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return await this.itemsService.delete(id);
+  @UseGuards(JwtAuthGuard)
+  async delete(
+    @Param('id', ParseUUIDPipe) id: string,
+    @GetUser() user: User,
+  ): Promise<void> {
+    return await this.itemsService.delete(id, user);
   }
 }
