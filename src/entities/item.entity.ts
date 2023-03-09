@@ -1,5 +1,6 @@
 import { ItemStatus } from 'src/items/item.model';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class Item {
@@ -23,4 +24,12 @@ export class Item {
 
   @Column()
   updatedAt: string;
+
+  // User とのリレーション
+  // アイテムはひとりのユーザーに結びつけられるので 多対1
+  @ManyToOne(() => User, (user) => user.items)
+  user: User;
+
+  @Column()
+  userId: string;
 }
