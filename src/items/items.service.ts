@@ -8,7 +8,7 @@ import { CreateItemDto } from './dto/create-item.dto';
 // import { Item } from './item.model';
 import { Item } from '../entities/item.entity';
 import { ItemRepository } from './item.repository';
-import { User } from 'src/entities/user.entity';
+import { User } from '../entities/user.entity';
 // import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 // import { ItemStatus } from './item.model';
 

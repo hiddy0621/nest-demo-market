@@ -11,7 +11,7 @@ module.exports = {
   migrations: ['dist/migrations/**.js'],
   //　CLIによって EntityファイルやMigrationファイルが出力された時の指定
   cli: {
-    entitiesDir: 'src/entities',
-    migrationsDir: 'src/migrations',
+    entitiesDir: '../entities',
+    migrationsDir: '../migrations',
   },
 };

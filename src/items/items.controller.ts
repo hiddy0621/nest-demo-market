@@ -16,11 +16,11 @@ import { CreateItemDto } from './dto/create-item.dto';
 // import { Item } from './item.model';
 import { Item } from '../entities/item.entity';
 import { ItemsService } from './items.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { GetUser } from 'src/auth/decorator/get-user.decorator';
-import { User } from 'src/entities/user.entity';
-import { Role } from 'src/auth/decorator/role.decorator';
-import { RoleGuard } from 'src/auth/guards/role.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { GetUser } from '../auth/decorator/get-user.decorator';
+import { User } from '../entities/user.entity';
+import { Role } from '../auth/decorator/role.decorator';
+import { RoleGuard } from '../auth/guards/role.guard';
 
 @Controller('items')
 @UseInterceptors(ClassSerializerInterceptor)

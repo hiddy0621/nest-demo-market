@@ -1,4 +1,4 @@
-import { ItemStatus } from 'src/items/item.model';
+import { ItemStatus } from '../items/item.model';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 
