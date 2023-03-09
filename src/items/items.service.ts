@@ -30,8 +30,8 @@ export class ItemsService {
     return found;
   }
 
-  // アイテムオブジェクトの作成メソッドはリポジトリに移管済み
-  // そのため、そのメソッドを呼び出せばOK
+  // 作成メソッドはリポジトリに移管済み
+  // なので、リポジトリからメソッドを呼び出せばOK
   async create(createItemDto: CreateItemDto): Promise<Item> {
     return await this.itemRepositry.createItem(createItemDto);
   }

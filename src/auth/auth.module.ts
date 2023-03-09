@@ -5,6 +5,8 @@ import { AuthService } from './auth.service';
 import { UserRepository } from './user.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './jwt.strategy';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -19,6 +21,9 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy, JwtAuthGuard],
+  // 認証済みユーザーがアイテム操作できるように
+  // JwtStrategy とJwtAuthGuard をエクスポート
+  exports: [JwtStrategy, JwtAuthGuard],
 })
 export class AuthModule {}
